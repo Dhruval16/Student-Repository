@@ -255,3 +255,16 @@ class File_Reader:
 
         print("Instructor Summary")
         print(pt)
+
+
+def main():
+    """ Put directory address in File_Reader() """
+    f: File_Reader = File_Reader(
+        "C:/Users/Dhruval/Desktop/Sem-3/SSW-810/Homework")
+    f.major_pretty_table()
+    f.student_pretty_table()
+    f.student_pretty_table()
+
+
+if __name__ == "__main__":
+    main()
