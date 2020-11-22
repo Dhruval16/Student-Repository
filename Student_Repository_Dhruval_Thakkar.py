@@ -165,7 +165,7 @@ class File_Reader:
             , it raises an exception """
         try:
             for cwid, name, major in \
-                    file_reader(path, 3, sep=';', header=True):
+                    file_reader(path, 3, sep='\t', header=True):
                 if cwid not in self._students:
                     self._students[cwid] = Student(cwid, name, major)
                 else:
@@ -178,7 +178,7 @@ class File_Reader:
             of class instructor and if the file not found or any\
             value error, it raises an exception"""
         try:
-            for cwid, name, dept in file_reader(path, 3, sep='|', header=True):
+            for cwid, name, dept in file_reader(path, 3, sep='\t', header=True):
                 if cwid not in self._instructors:
                     self._instructors[cwid] = Instructor(cwid, name, dept)
                 else:
@@ -194,7 +194,7 @@ class File_Reader:
             is found"""
         try:
             for student_cwid, course, grade, instructor_cwid in \
-                    file_reader(path, 4, sep='|', header=True):
+                    file_reader(path, 4, sep='\t', header=True):
                 try:
                     s: Student = self._students[student_cwid]
                     s.add_course_grade(course, grade)
