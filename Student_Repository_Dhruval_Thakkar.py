@@ -7,6 +7,7 @@ from prettytable import PrettyTable
 from collections import defaultdict
 from HW08_Dhruval_Thakkar import file_reader
 import os
+import sqlite3
 
 
 class Major:
@@ -178,7 +179,8 @@ class File_Reader:
             of class instructor and if the file not found or any\
             value error, it raises an exception"""
         try:
-            for cwid, name, dept in file_reader(path, 3, sep='\t', header=True):
+            for cwid, name, dept in file_reader(path, 3, sep='\t',
+                                                header=True):
                 if cwid not in self._instructors:
                     self._instructors[cwid] = Instructor(cwid, name, dept)
                 else:
@@ -256,14 +258,31 @@ class File_Reader:
         print("Instructor Summary")
         print(pt)
 
+    def student_grades_table_db(self, db_path) -> None:
+        """ print pretty table with query result, which uses students,\
+            grades and instructors table. """
+        pt = PrettyTable(field_names=["Name", "CWID", "Course", "Grade",
+                                      "Instructor"])
+        db_file: str = db_path
+        db: sqlite3.Connection = sqlite3.connect(db_file)
+        for row in db.execute("select s.Name as Student, s.CWID, g.Course,\
+            g.Grade, i.Name as Instructor from grades g, \
+            students s, instructors i where g.StudentCWID=s.CWID \
+                and g.InstructorCWID=i.CWID"):
+            pt.add_row(row)
+
+        print("Student Grade Summary")
+        print(pt)
+
 
 def main():
     """ Put directory address in File_Reader() """
     f: File_Reader = File_Reader(
-        "C:/Users/Dhruval/Desktop/Sem-3/SSW-810/Homework")
+        "C:/Users/Dhruval/Desktop/Student-Repository")
     f.major_pretty_table()
     f.student_pretty_table()
-    f.student_pretty_table()
+    f.instructor_pretty_table()
+    f.student_grades_table_db("C:/Users/Dhruval/Desktop/Sem-3/SSW-810/hw11.db")
 
 
 if __name__ == "__main__":
