@@ -2,7 +2,7 @@
 Created on Sun Nov 22 17:40:33 2020
 @author: Dhruval
 """
-
+import unittest
 from prettytable import PrettyTable
 from collections import defaultdict
 from HW08_Dhruval_Thakkar import file_reader
@@ -285,5 +285,65 @@ def main():
     f.student_grades_table_db("C:/Users/Dhruval/Desktop/Sem-3/SSW-810/hw11.db")
 
 
+class TestSetUp(unittest.TestCase):
+    def test_setup(self) -> None:
+        self.file_r: File_Reader = File_Reader(
+            "C:/Users/Dhruval/Desktop/Sem-3/SSW-810/Homework/HW_11", False)
+
+
+class TestMajor(unittest.TestCase):
+    def test_majorclass(self) -> None:
+        self.file_r: File_Reader = File_Reader(
+            "C:/Users/Dhruval/Desktop/Sem-3/SSW-810/Homework/HW_11", False)
+        print([major.info() for major in
+               self.file_r._major.values()])
+        self.assertEqual([['SFEN', ['SSW 540', 'SSW 555', 'SSW 810'],
+                           ['CS 501', 'CS 546']],
+                          ['CS', ['CS 546', 'CS 570'],
+                           ['SSW 565', 'SSW 810']]],
+                         [major.info() for major in
+                             self.file_r._major.values()])
+
+
+class TestInstructor(unittest.TestCase):
+    def test_instructorclass(self) -> None:
+        self.file_r: File_Reader = File_Reader(
+            "C:/Users/Dhruval/Desktop/Sem-3/SSW-810/Homework/HW_11", False)
+        self.assertEqual([['98764', 'Cohen, R', 'SFEN', 'CS 546', 1],
+                          ['98763', 'Rowland, J', 'SFEN', 'SSW 810', 4],
+                          ['98763', 'Rowland, J', 'SFEN', 'SSW 555', 1],
+                          ['98762', 'Hawking, S', 'CS', 'CS 501', 1],
+                          ['98762', 'Hawking, S', 'CS', 'CS 546', 1],
+                          ['98762', 'Hawking, S', 'CS', 'CS 570', 1]],
+                         [list(val) for instructor in
+                             self.file_r._instructors.values(
+                         ) for val in instructor.get_instructor_info()])
+
+
+class TestStudentGrade(unittest.TestCase):
+    def test_student_grade_info(self) -> None:
+        self.file_r: File_Reader = File_Reader(
+            "C:/Users/Dhruval/Desktop/Sem-3/SSW-810/Homework/HW_11", False)
+        result = []
+        db = sqlite3.connect(
+            "C:/Users/Dhruval/Desktop/Sem-3/SSW-810/hw11.db")
+        for row in db.execute("select students.Name, students.CWID, \
+            grades.Course, grades.Grade, instructors.Name from students,\
+                grades,instructors where students.CWID=StudentCWID and\
+                     InstructorCWID=instructors.CWID order by students.Name"):
+            result.append(row)
+            self.assertEqual
+            ([('Bezos, J', '10115', 'SSW 810', 'A', 'Rowland, J'),
+              ('Bezos, J', '10115', 'CS 546', 'F', 'Hawking, S'),
+              ('Gates, B', '11714', 'SSW 810', 'B-', 'Rowland, J'),
+              ('Gates, B', '11714', 'CS 546', 'A', 'Cohen, R'),
+              ('Gates, B', '11714', 'CS 570', 'A-', 'Hawking, S'),
+              ('Jobs, S', '10103', 'SSW 810', 'A-', 'Rowland, J'),
+              ('Jobs, S', '10103', 'CS 501', 'B', 'Hawking, S'),
+              ('Musk, E', '10183', 'SSW 555', 'A', 'Rowland, J'),
+              ('Musk, E', '10183', 'SSW 810', 'A', 'Rowland, J')], result)
+
+
 if __name__ == "__main__":
+    unittest.main(exit=False, verbosity=2)
     main()
