@@ -47,9 +47,11 @@ def file_reader(path: str, fields: int, sep: str = ",",
                 except Exception:
                     break
                 line_next = line_next.split(sep)
-                line_next[len(
-                    line_next)-1] = line_next[len(
-                        line_next)-1][:len(line_next[len(line_next)-1])-1]
+                if line_next[len(
+                        line_next)-1].endswith('\n'):
+                    line_next[len(
+                        line_next)-1] = line_next[len(
+                            line_next)-1][:len(line_next[len(line_next)-1])-1]
                 if len(line_next) != fields:
                     raise ValueError(
                         f"{file_name} has {len(line_next)} fields on the line\
