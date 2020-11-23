@@ -263,7 +263,7 @@ def main():
         "C:/Users/Dhruval/Desktop/Sem-3/SSW-810/Homework")
     f.major_pretty_table()
     f.student_pretty_table()
-    f.student_pretty_table()
+    f.instructor_pretty_table()
 
 
 if __name__ == "__main__":
